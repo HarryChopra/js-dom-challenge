@@ -1,8 +1,11 @@
+const btnContainer = document.querySelectorAll('button');
 const counterEl = document.querySelector('h1#counter');
 const commentsEl = document.querySelector('div.comments');
 const likesEl = document.querySelector('ul.likes');
+// state
 let count = 0;
 let timerID = 0;
+let likes = {};
 
 function refreshCounter() {
     counterEl.textContent = count;
@@ -41,15 +44,14 @@ function pauseCounter(ev) {
 }
 
 function addLikes() {
-    let likeEl = document.querySelector(`li[data-num='${count}']`);
-    if (likeEl) {
-        likeEl.dataset.likes = parseInt(likeEl.dataset.likes) + 1;
-        likeEl.textContent = `${count} has been liked ${likeEl.dataset.likes} times.`;
+    if (likes[count]) {
+        const likeEl = document.querySelector(`li[data-num='${count}']`);
+        likeEl.textContent = `${count} has been liked ${++likes[count]} times.`;
         return;
     }
-    likeEl = document.createElement('li');
+    const likeEl = document.createElement('li');
     likeEl.setAttribute('data-num', count);
-    likeEl.setAttribute('data-likes', 1);
+    likes[count] = 1;
     likeEl.textContent = `${count} has been liked 1 time.`;
     likesEl.appendChild(likeEl);
 }
@@ -61,6 +63,7 @@ function addComment(ev) {
         const commentEl = document.createElement('p');
         commentEl.textContent = comment;
         commentsEl.appendChild(commentEl);
+        ev.target.reset();
     }
 }
 
